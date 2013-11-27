@@ -12,7 +12,7 @@ public class Principal {
 	public static void main(String[] args) {
 		
 		
-		//PainelPrincipal painel = new PainelPrincipal();
+		PainelPrincipal painel = new PainelPrincipal();
 		
 		
 		Connector connect = new Twitter();
