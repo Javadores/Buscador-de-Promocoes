@@ -1,31 +1,47 @@
 package br.com.ufrrj.principal;
 
-import br.com.rural.graficos.PainelPrincipal;
+import org.json.JSONException;
+
 import br.com.ufrrj.base.Connector;
-import br.com.ufrrj.base.Twitt;
-import br.com.ufrrj.bd.JdbcDao;
+import br.com.ufrrj.base.Data;
 import br.com.ufrrj.conexao.twitter.Twitter;
+import br.com.ufrrj.conexao.twitter.util.Twitt;
+import br.com.ufrrj.conexao.twitter.util.Twitts;
+import br.com.ufrrj.graficos.PainelPrincipal;
 
 public class Principal {
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JSONException {
 		
 		
-		PainelPrincipal painel = new PainelPrincipal();
+		//PainelPrincipal painel = new PainelPrincipal();
 		
 		
 		Connector connect = new Twitter();
-        connect.connect();
+        Data data =  connect.getUserPosts("rafinhabastos");
+       
+       Twitts array = (Twitts)data;
+        int i=0;
+       for (Twitt t : array.toTwittArray()) {
+    	   
+    	   System.out.println(t.getPost());
+    	   System.out.println(t.getId()+"\n");
+    	   
+    	   i++;
+		
+	}
+       System.out.println(i);
+       //connect.close();
         
-        Twitt twitt = connect.getTwitt("@pontofrio");
+       
         
-        JdbcDao dao = new JdbcDao();
+     
         
-        dao.setTwitt(twitt);
+       // dao.setTwitt(twitt);
         
         
-        connect.close();
+       // connect.close();
         
 		
 	}

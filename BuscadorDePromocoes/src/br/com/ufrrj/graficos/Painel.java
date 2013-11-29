@@ -1,4 +1,4 @@
-package br.com.rural.graficos;
+package br.com.ufrrj.graficos;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -1,18 +1,13 @@
 package br.com.ufrrj.conexao.rss;
 
 import br.com.ufrrj.base.Connector;
-import br.com.ufrrj.base.Twitt;
+import br.com.ufrrj.base.Data;
+import br.com.ufrrj.conexao.twitter.util.Twitt;
 
 public class Rss implements Connector{
 
 	@Override
-	public void connect() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Twitt getTwitt(String url) {
+	public Data getUserPosts(String url) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -22,5 +17,12 @@ public class Rss implements Connector{
 		// TODO Auto-generated method stub
 		
 	}
+
+	
+
+	
+
+
+
 
 }
