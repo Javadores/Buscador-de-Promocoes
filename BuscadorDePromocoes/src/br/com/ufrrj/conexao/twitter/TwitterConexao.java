@@ -30,23 +30,22 @@ import br.com.ufrrj.base.Data;
 import br.com.ufrrj.conexao.twitter.util.APIType;
 import br.com.ufrrj.conexao.twitter.util.OAuthTokenSecret;
 import br.com.ufrrj.conexao.twitter.util.OAuthUtils;
+import br.com.ufrrj.conexao.twitter.util.Profile;
 import br.com.ufrrj.conexao.twitter.util.TwitterOAuthSecret;
 import br.com.ufrrj.conexao.twitter.util.Twitts;
 
-public class Twitter implements Connector {
+public class TwitterConexao implements Connector {
 
-	// file handlers to store the collected user information
-	BufferedWriter OutFileWriter;
-	OAuthTokenSecret OAuthTokens;
-	/**
-	 * name of the file containing a list of users
-	 */
-	ArrayList<String> Usernames = new ArrayList<String>();
-	OAuthConsumer Consumer;
+    private BufferedWriter OutFileWriter;
+	private OAuthTokenSecret OAuthTokens;
+	
+	
+	private ArrayList<String> Usernames = new ArrayList<String>();
+	private OAuthConsumer Consumer;
 
 	/**
-	 * Creates a OAuthConsumer with the current consumer & user access tokens
-	 * and secrets
+	 * Cria um OAuthConsumer com os tokens de acesso
+	 * 
 	 * 
 	 * @return consumer
 	 */
@@ -68,7 +67,7 @@ public class Twitter implements Connector {
 		LoadTwitterToken();
 
 		this.Consumer = GetConsumer();
-
+        
 		twitts.setData(GetStatuses(url));
 
 		return twitts;
@@ -77,38 +76,12 @@ public class Twitter implements Connector {
 	@Override
 	public void close() {
 
-		System.gc();
+	
 	}
 
+	
 	/**
-	 * Reads the file and loads the users in the file to be crawled
-	 * 
-	 * @param filename
-	 */
-	public void ReadUsers(String filename) {
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					filename), "UTF-8"));
-			String temp = "";
-			while ((temp = br.readLine()) != null) {
-				if (!temp.isEmpty()) {
-					Usernames.add(temp);
-				}
-			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			try {
-				br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Load the User Access Token, and the User Access Secret
+	 * Carrega o acessToken
 	 */
 	public void LoadTwitterToken() {
 	
@@ -133,31 +106,31 @@ public class Twitter implements Connector {
 			bRead.close();
 			return (new JSONObject(page.toString()));
 		} catch (JSONException ex) {
-			Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE, null,
+			Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null,
 					ex);
 		} catch (OAuthCommunicationException ex) {
-			Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE, null,
+			Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null,
 					ex);
 		} catch (OAuthMessageSignerException ex) {
-			Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE, null,
+			Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null,
 					ex);
 		} catch (OAuthExpectationFailedException ex) {
-			Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE, null,
+			Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null,
 					ex);
 		} catch (IOException ex) {
-			Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE, null,
+			Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null,
 					ex);
 		}
 		return null;
 	}
 
 	/**
-	 * Initialize the file writer
+	 * inicializa o FileWriter
 	 * 
-	 * @param path
-	 *            of the file
-	 * @param outFilename
-	 *            name of the file
+	 * 
+	 *           
+	 * 
+	 *           
 	 */
 	public void InitializeWriters(String outFilename) {
 		try {
@@ -177,22 +150,22 @@ public class Twitter implements Connector {
 	}
 
 	/**
-	 * Close the opened filewriter to save the data
+	 * Fecha o fileWriter para salvar os arquivos
 	 */
 	public void CleanupAfterFinish() {
 		try {
 			OutFileWriter.close();
 		} catch (IOException ex) {
-			Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE, null,
+			Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null,
 					ex);
 		}
 	}
 
 	/**
-	 * Writes the retrieved data to the output file
+	 * Escreve os arquivos recebidos no output file
 	 * 
 	 * @param data
-	 *            containing the retrived information in JSON
+	 *            contem a informaçao recebida pelo json
 	 * @param user
 	 *            name of the user currently being written
 	 */
@@ -206,11 +179,11 @@ public class Twitter implements Connector {
 	}
 
 	/**
-	 * Retrives the profile information of the user
+	 * Retorna as informaçoes do profile do usuario
 	 * 
 	 * @param username
-	 *            of the user whose profile needs to be retrieved
-	 * @return the profile information as a JSONObject
+	 *           . nome do usuario que se deseja retornar o profile
+	 * @return as informaçoes do profile como um JsonObject
 	 */
 	public JSONObject GetProfile(String username) {
 		BufferedReader bRead = null;
@@ -283,11 +256,12 @@ public class Twitter implements Connector {
 	}
 
 	/**
-	 * Retrieves the followers of a user
+	 * Retorna os seguidores de um usuario
 	 * 
 	 * @param username
-	 *            the name of the user whose followers need to be retrieved
-	 * @return a list of user objects corresponding to the followers of the user
+	 *           o nome do usuario que voce deseja que sejam retornados os seguidores
+	 *           
+	 * @return uma lista contendo os seguidores de um usuario
 	 */
 	public JSONArray GetFollowers(String username) {
 		BufferedReader bRead = null;
@@ -323,7 +297,7 @@ public class Twitter implements Connector {
 						Thread.sleep(3000);
 						continue;
 					} catch (InterruptedException ex) {
-						Logger.getLogger(Twitter.class.getName()).log(
+						Logger.getLogger(TwitterConexao.class.getName()).log(
 								Level.SEVERE, null, ex);
 					}
 				} else
@@ -335,7 +309,7 @@ public class Twitter implements Connector {
 						Thread.sleep(this.GetWaitTime("/followers/list"));
 						continue;
 					} catch (InterruptedException ex) {
-						Logger.getLogger(Twitter.class.getName()).log(
+						Logger.getLogger(TwitterConexao.class.getName()).log(
 								Level.SEVERE, null, ex);
 					}
 				}
@@ -359,7 +333,7 @@ public class Twitter implements Connector {
 						followers.put(idlist.getJSONObject(i));
 					}
 				} catch (JSONException ex) {
-					Logger.getLogger(Twitter.class.getName()).log(Level.SEVERE,
+					Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE,
 							null, ex);
 				}
 			}
@@ -376,12 +350,12 @@ public class Twitter implements Connector {
 	}
 
 	/**
-	 * Retrieved the status messages of a user
+	 * Retorna as mensagens de um determinado usuario
 	 * 
 	 * @param username
-	 *            the name of the user whose status messages need to be
-	 *            retrieved
-	 * @return a list of status messages
+	 *            o nome do usuario que voce deseja ter as mensagens
+	 *            
+	 * @return uma lista com as mensagens
 	 */
 	public JSONArray GetStatuses(String username) {
 		BufferedReader bRead = null;
@@ -396,7 +370,7 @@ public class Twitter implements Connector {
 			
 			int paginas = 0;
 			
-			while (paginas < 10) {
+			while (paginas < 50) {
 
 				URL url = null;
 				if (maxid == 0) {
@@ -423,7 +397,7 @@ public class Twitter implements Connector {
 				if (huc.getResponseCode() == 400
 						|| huc.getResponseCode() == 404) {
 					System.out.println(huc.getResponseCode());
-					System.out.println("vai parar");
+				
 					break;
 				} else if (huc.getResponseCode() == 500
 						|| huc.getResponseCode() == 502
@@ -432,7 +406,7 @@ public class Twitter implements Connector {
 						System.out.println(huc.getResponseCode());
 						Thread.sleep(3000);
 					} catch (InterruptedException ex) {
-						Logger.getLogger(Twitter.class.getName()).log(
+						Logger.getLogger(TwitterConexao.class.getName()).log(
 								Level.SEVERE, null, ex);
 					}
 				} else
@@ -491,11 +465,11 @@ public class Twitter implements Connector {
 	}
 
 	/**
-	 * Retrieves the friends of a user
+	 * Retorna os amigos de um usuario
 	 * 
 	 * @param username
-	 *            the name of the user whose friends need to be fetched
-	 * @return a list of user objects who are friends of the user
+	 *           o nome do usuario que voce deseja obbter a lista de amigos
+	 * @return uma lista contendo os amigos do usuario
 	 */
 	public JSONArray GetFriends(String username) {
 		BufferedReader bRead = null;
@@ -580,12 +554,11 @@ public class Twitter implements Connector {
 	}
 
 	/**
-	 * Retrieves the wait time if the API Rate Limit has been hit
+	 * Retorna o tempo de espera se o limite da RestApi For alcançado
 	 * 
 	 * @param api
-	 *            the name of the API currently being used
-	 * @return the number of milliseconds to wait before initiating a new
-	 *         request
+	 *            o nome da Api que esta sendo usada
+	 * @return um numero em millisegundos que se deve esperar até a prosima requisição
 	 */
 	public long GetWaitTime(String api) {
 		JSONObject jobj = this.GetRateLimitStatus();
@@ -624,5 +597,23 @@ public class Twitter implements Connector {
 		}
 		return 0;
 	}
+
+	@Override
+	public Data getProfile(String url) {
+		
+		LoadTwitterToken();
+		this.Consumer = GetConsumer();
+		
+		Profile p = new Profile();
+		try {
+			p.setData(GetProfile(url).getString("screen_name"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return p;
+	}
+
+	
 
 }

@@ -4,7 +4,15 @@ public class Twitt {
 	
 	
 	private String id;
+	private String usuario;
 	private String post;
+	
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 	
 	public String getId() {
 		return id;
@@ -17,6 +25,12 @@ public class Twitt {
 	}
 	public void setPost(String post) {
 		this.post = post;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "https://twitter.com/"+this.usuario+"/status/"+this.id;
 	}
 
 }

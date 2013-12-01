@@ -18,6 +18,12 @@ public class Rss implements Connector{
 		
 	}
 
+	@Override
+	public Data getProfile(String url) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 	

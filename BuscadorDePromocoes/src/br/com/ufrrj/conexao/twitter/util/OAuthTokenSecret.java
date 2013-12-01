@@ -1,5 +1,10 @@
 package br.com.ufrrj.conexao.twitter.util;
-
+/**
+ * 
+ * @author john
+ * classe utilizada  para encapsular os tokens de segurança
+ */
+	
 public class OAuthTokenSecret {
 
 	String UserAccessToken;

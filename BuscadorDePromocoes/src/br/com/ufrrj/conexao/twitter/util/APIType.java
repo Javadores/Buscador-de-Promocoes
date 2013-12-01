@@ -1,5 +1,10 @@
 package br.com.ufrrj.conexao.twitter.util;
 
+/**
+ * 
+ * @author john
+ * enum contendo os tipos de api utilizadas pelo programa
+ */
 public class APIType {
 	
 	    public static String USER_TIMELINE = "/statuses/user_timeline";
