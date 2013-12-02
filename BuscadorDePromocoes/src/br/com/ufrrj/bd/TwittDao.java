@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import br.com.ufrrj.conexao.twitter.util.Profile;
 import br.com.ufrrj.conexao.twitter.util.Twitt;
 
 /**
@@ -45,7 +46,7 @@ public class TwittDao {
 
 	}
 
-	public void insertTwitt(Twitt twitt) {
+	public void insertTwitt(Twitt twitt,Profile profile) {
 		try {
 
 			String sql = "insert into Twitt(twitt_id,twitt,username)  values(?,?,?)";
@@ -53,9 +54,11 @@ public class TwittDao {
 			PreparedStatement insert = conn.prepareStatement(sql);
 			insert.setString(1, twitt.getId());
 			insert.setString(2, twitt.getPost());
-			insert.setString(3, twitt.getUsuario());
+			insert.setString(3, profile.getData());
 
 			insert.execute();
+			
+			insert.close();
 
 		} catch (SQLException sqlExcept) {
 			sqlExcept.printStackTrace();

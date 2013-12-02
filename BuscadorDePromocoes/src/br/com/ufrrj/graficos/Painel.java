@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +24,8 @@ import org.omg.CORBA.portable.InputStream;
 
 public class Painel extends JPanel {
 	
-	JTextArea area = new JTextArea();
-	JButton botao = new JButton();
+    private	JTextArea area = new JTextArea();
+	private JButton botao = new JButton();
 	
 	public Painel() {
 		
@@ -33,12 +35,29 @@ public class Painel extends JPanel {
 	
 		area.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,30));
 		area.setForeground(Color.WHITE);
-	
+	    addEvent();
 		setSize(300, 200);
 		setLayout(new FlowLayout(FlowLayout.LEADING,80,230));
+	
 		add(area);
 		add(botao);
 		
+		
+	}
+	
+	
+	private void addEvent(){
+		
+		botao.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				//faz a requisição para o facade 
+				//area.getText();
+				
+			}
+		});
 		
 	}
 	

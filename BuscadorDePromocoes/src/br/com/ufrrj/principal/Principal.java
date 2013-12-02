@@ -6,6 +6,7 @@ import br.com.ufrrj.base.Connector;
 import br.com.ufrrj.base.Data;
 import br.com.ufrrj.bd.TwittDao;
 import br.com.ufrrj.conexao.twitter.TwitterConexao;
+import br.com.ufrrj.conexao.twitter.util.Profile;
 import br.com.ufrrj.conexao.twitter.util.Twitt;
 import br.com.ufrrj.conexao.twitter.util.Twitts;
 import br.com.ufrrj.graficos.PainelPrincipal;
@@ -25,16 +26,14 @@ public class Principal {
 		
 		for (int i = 0; i < nomes.length; i++) {
 
-			Data data = connect.getUserPosts(nomes[i]);
-            Data data2 = connect.getProfile(nomes[i]);
+			Twitts twitts = (Twitts) connect.getUserPosts(nomes[i]);
+            Profile profile = (Profile)connect.getProfile(nomes[i]);
             
-			Twitts array = (Twitts) data;
-			
+			Twitts array = (Twitts) twitts;
 			
 			 for (Twitt t : array.toTwittArray()) {
 
-				t.setUsuario((String)data2.getData());
-				dao.insertTwitt(t);
+				dao.insertTwitt(t,profile);
 
 			}
 

@@ -73,12 +73,6 @@ public class TwitterConexao implements Connector {
 		return twitts;
 	}
 
-	@Override
-	public void close() {
-
-	
-	}
-
 	
 	/**
 	 * Carrega o acessToken
