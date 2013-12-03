@@ -20,6 +20,14 @@ public class RssConexao implements Connector{
 		return null;
 	}
 
+
+
+	@Override
+	public Data performASearch(String query) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 	

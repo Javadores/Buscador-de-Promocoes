@@ -21,7 +21,7 @@ public class Twitts implements Data<JSONArray>{
 	@Override
 	public JSONArray getData() {
 		// TODO Auto-generated method stub
-		return null;
+		return array;
 	}
 
 	@Override
@@ -38,9 +38,13 @@ public class Twitts implements Data<JSONArray>{
 		for(int i =0 ; i < array.length() ;i++){
 			
 			JSONObject result = array.getJSONObject(i);
+			JSONObject aux = new JSONObject(result.getString("user"));
 			Twitt twitt = new Twitt();
 			twitt.setId(result.getString("id_str"));
 			twitt.setPost(result.getString("text"));
+			twitt.setUsuario(aux.getString("screen_name"));
+			
+			
 
 			arrayTwitts.add(twitt);
 			

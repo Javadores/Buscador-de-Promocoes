@@ -46,7 +46,7 @@ public class TwittDao {
 
 	}
 
-	public void insertTwitt(Twitt twitt,Profile profile) {
+	public void insertTwitt(Twitt twitt) {
 		try {
 
 			String sql = "insert into Twitt(twitt_id,twitt,username)  values(?,?,?)";
@@ -54,7 +54,7 @@ public class TwittDao {
 			PreparedStatement insert = conn.prepareStatement(sql);
 			insert.setString(1, twitt.getId());
 			insert.setString(2, twitt.getPost());
-			insert.setString(3, profile.getData());
+			insert.setString(3, twitt.getUsuario());
 
 			insert.execute();
 			

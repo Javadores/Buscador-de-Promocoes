@@ -11,6 +11,7 @@ public interface Connector {
   
 	public Data getUserPosts(String url);
 	public Data getProfile(String url);
+	public Data performASearch(String query);
 	
 	
 

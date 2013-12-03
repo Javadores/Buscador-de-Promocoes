@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import oauth.signpost.exception.OAuthMessageSignerException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import br.com.ufrrj.base.Connector;
 import br.com.ufrrj.base.Data;
@@ -31,6 +33,7 @@ import br.com.ufrrj.conexao.twitter.util.APIType;
 import br.com.ufrrj.conexao.twitter.util.OAuthTokenSecret;
 import br.com.ufrrj.conexao.twitter.util.OAuthUtils;
 import br.com.ufrrj.conexao.twitter.util.Profile;
+import br.com.ufrrj.conexao.twitter.util.SearchResults;
 import br.com.ufrrj.conexao.twitter.util.TwitterOAuthSecret;
 import br.com.ufrrj.conexao.twitter.util.Twitts;
 
@@ -43,6 +46,45 @@ public class TwitterConexao implements Connector {
 	private ArrayList<String> Usernames = new ArrayList<String>();
 	private OAuthConsumer Consumer;
 
+	
+	@Override
+	public Data getUserPosts(String url) {
+
+		Twitts twitts = new Twitts();
+
+		LoadTwitterToken();
+
+		this.Consumer = GetConsumer();
+        
+		twitts.setData(GetStatuses(url));
+
+		return twitts;
+	}
+	
+	@Override
+	public Data performASearch(String query) {
+		
+		LoadTwitterToken();
+		Consumer = GetConsumer();
+		SearchResults resultados = new SearchResults();
+		resultados.setData(GetSearchResults(query));
+		
+		return resultados;
+	}
+	
+	
+	@Override
+	public Data getProfile(String url) {
+		
+		LoadTwitterToken();
+		this.Consumer = GetConsumer();
+		
+		Profile p = new Profile();
+		p.setData(GetProfile(url));
+		return p;
+	}
+	
+	
 	/**
 	 * Cria um OAuthConsumer com os tokens de acesso
 	 * 
@@ -59,20 +101,6 @@ public class TwitterConexao implements Connector {
 		return consumer;
 	}
 
-	@Override
-	public Data getUserPosts(String url) {
-
-		Twitts twitts = new Twitts();
-
-		LoadTwitterToken();
-
-		this.Consumer = GetConsumer();
-        
-		twitts.setData(GetStatuses(url));
-
-		return twitts;
-	}
-
 	
 	/**
 	 * Carrega o acessToken
@@ -82,6 +110,8 @@ public class TwitterConexao implements Connector {
 		OAuthTokens = TwitterOAuthSecret.userAccessSecret();
 	}
 
+	
+	
 	public JSONObject GetRateLimitStatus() {
 		try {
 			URL url = new URL(
@@ -592,21 +622,83 @@ public class TwitterConexao implements Connector {
 		return 0;
 	}
 
-	@Override
-	public Data getProfile(String url) {
-		
-		LoadTwitterToken();
-		this.Consumer = GetConsumer();
-		
-		Profile p = new Profile();
-		try {
-			p.setData(GetProfile(url).getString("screen_name"));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return p;
-	}
+	
+	
+	
+	
+	/**
+     * Realiza uma busca que coincida com o parametro dado
+     * @param  criterio de busca ex: hashtags
+     * @return um array com os status dos usuarios
+     */
+    public JSONArray GetSearchResults(String query)
+    {
+        try{
+            //construct the request url
+            String URL_PARAM_SEPERATOR = "&";
+            StringBuilder url = new StringBuilder();
+            url.append("https://api.twitter.com/1.1/search/tweets.json?q=");
+            //query needs to be encoded
+            url.append(URLEncoder.encode(query, "UTF-8"));
+            url.append(URL_PARAM_SEPERATOR);
+            url.append("count=100");
+            URL navurl = new URL(url.toString());
+            HttpURLConnection huc = (HttpURLConnection) navurl.openConnection();
+            huc.setReadTimeout(5000);
+            Consumer.sign(huc);
+            huc.connect();
+            if(huc.getResponseCode()==400||huc.getResponseCode()==404||huc.getResponseCode()==429)
+            {
+                System.out.println(huc.getResponseMessage());
+                try {
+                    huc.disconnect();
+                    Thread.sleep(this.GetWaitTime("/friends/list"));
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if(huc.getResponseCode()==500||huc.getResponseCode()==502||huc.getResponseCode()==503)
+            {
+                System.out.println(huc.getResponseMessage());
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            BufferedReader bRead = new BufferedReader(new InputStreamReader((InputStream) huc.getInputStream()));
+            String temp;
+            StringBuilder page = new StringBuilder();
+            while( (temp = bRead.readLine())!=null)
+            {
+                page.append(temp);
+            }
+            JSONTokener jsonTokener = new JSONTokener(page.toString());
+            try {
+                JSONObject json = new JSONObject(jsonTokener);
+                JSONArray results = json.getJSONArray("statuses");
+                return results;
+            } catch (JSONException ex) {
+                Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        } catch (OAuthCommunicationException ex) {
+            Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (OAuthMessageSignerException ex) {
+            Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (OAuthExpectationFailedException ex) {
+            Logger.getLogger(TwitterConexao.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(IOException ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+	
+	
+	
+	
+	
 
 	
 
