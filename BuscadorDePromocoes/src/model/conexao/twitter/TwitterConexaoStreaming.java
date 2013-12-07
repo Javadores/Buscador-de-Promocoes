@@ -77,9 +77,18 @@ public class TwitterConexaoStreaming implements Connector
     
     @Override
 	public Data getUserPosts(String url) {
+    	
 		LoadTwitterToken();
 		ReadParameters(CONFIG_FILE_PATH);
-		CreateStreamingConnection(url);
+		InputStream in = CreateStreamingConnection(url);
+		ProcessTwitterStream(in);
+		
+		try {
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
@@ -102,7 +111,7 @@ public class TwitterConexaoStreaming implements Connector
      * @param baseUrl the URL for Twitter Filter API
      * @param outFilePath Location to place the exported file
      */
-    private void CreateStreamingConnection(String baseUrl)
+    private InputStream CreateStreamingConnection(String baseUrl)
     {
         HttpClient httpClient = new DefaultHttpClient();
         httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, new Integer(90000));
@@ -146,24 +155,13 @@ public class TwitterConexaoStreaming implements Connector
                     } catch (IllegalStateException ex) {
                         ex.printStackTrace();
                     }
-                    //Step 5: Process the incoming Tweet Stream
-                    ProcessTwitterStream(is);
+                   
                 }
          } catch (IOException ex) {
             ex.printStackTrace();
-        }finally {
-            // Abort the method, otherwise releaseConnection() will
-            // attempt to finish reading the never-ending response.
-            // These methods do not throw exceptions.
-            if(is!=null)
-            {
-                try {
-                    is.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
         }
+        
+        return is;
     }
 
     /**

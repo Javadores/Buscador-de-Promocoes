@@ -74,6 +74,8 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 
 	@Override
 	public ArrayList<Tweet> select(String query) {
+		
+		ArrayList<Tweet> array = new ArrayList<Tweet>();
 
 		try {
 
@@ -82,22 +84,18 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 			ResultSet results = stmt.executeQuery("select * from " + " Twitt");
 
 			ResultSetMetaData rsmd = results.getMetaData();
-			int numberCols = rsmd.getColumnCount();
-			for (int i = 1; i <= numberCols; i++) {
-
-				System.out.print(rsmd.getColumnLabel(i) + "\t\t");
-			}
-
-			System.out
-					.println("\n-------------------------------------------------");
+		    
 
 			while (results.next()) {
-				int id = results.getInt(1);
-				String twittid = results.getString(2);
-				String twitt = results.getString(3);
-				String user = results.getString(4);
-				System.out.println(id + "\t\t" + twittid + "\t\t" + twitt
-						+ "\t\t" + user);
+				
+				Tweet tweet = new Tweet();
+				
+				
+				tweet.setId( results.getString(2));
+			    tweet.setPost(results.getString(3));
+				tweet.setUsuario( results.getString(4));
+				
+				array.add(tweet);
 			}
 			results.close();
 			stmt.close();
@@ -105,7 +103,7 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 			sqlExcept.printStackTrace();
 		}
 
-		return null;
+		return array;
 	}
 
 }
