@@ -1,4 +1,4 @@
-package model.bd;
+package controller.bd;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,12 +16,12 @@ import model.conexao.twitter.util.Tweet;
  * 
  * @author john Classe que fará a persistencia dos dados
  */
-public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
+public class TweetDao implements Dao<Tweet, ArrayList<Tweet>> {
 
 	private static Statement stmt = null;
 	private static Connection conn;
 
-	public TwittDao() {
+	public TweetDao() {
 
 		try {
 			conn = DerbyConnection
@@ -40,9 +40,8 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 		try {
 			stmt = conn.createStatement();
 			stmt.execute("create table "
-					+ "Twitt(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-					+ " twitt_id varchar(50),twitt varchar(600),username varchar(50),CONSTRAINT primaryKey PRIMARY KEY (id))");
-
+					+ "Tweet(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+					+ " tweet_id varchar(50),tweet varchar(600),username varchar(50),horario time,data date ,CONSTRAINT primaryKey PRIMARY KEY (id))");
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -55,13 +54,14 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 
 		try {
 
-			String sql = "insert into Twitt(twitt_id,twitt,username)  values(?,?,?)";
+			String sql = "insert into Tweet(tweet_id,tweet,username,horario,data)  values(?,?,?,?,?)";
 
 			PreparedStatement insert = conn.prepareStatement(sql);
 			insert.setString(1, tweet.getId());
 			insert.setString(2, tweet.getPost());
 			insert.setString(3, tweet.getUsuario());
-
+			insert.setTime(4, tweet.getTime());
+			insert.setDate(5, tweet.getData());
 			insert.execute();
 
 			insert.close();
@@ -81,22 +81,30 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 
 			stmt = conn.createStatement();
 
-			ResultSet results = stmt.executeQuery("select * from " + " Twitt");
+			ResultSet results = stmt.executeQuery("select * from " + " Tweet");
+		
 
-			ResultSetMetaData rsmd = results.getMetaData();
-		    
+			
+			
+		    int i =0;
 
 			while (results.next()) {
 				
 				Tweet tweet = new Tweet();
 				
 				
-				tweet.setId( results.getString(2));
+				tweet.setId(results.getString(2));
 			    tweet.setPost(results.getString(3));
-				tweet.setUsuario( results.getString(4));
+				tweet.setUsuario(results.getString(4));
+				tweet.setTime(results.getTime(5));
+				tweet.setData(results.getDate(6));
 				
 				array.add(tweet);
+				i++;
 			}
+			
+			System.out.println("tamanho "+i);
+			
 			results.close();
 			stmt.close();
 		} catch (SQLException sqlExcept) {
@@ -105,5 +113,7 @@ public class TwittDao implements Dao<Tweet, ArrayList<Tweet>> {
 
 		return array;
 	}
+	}
 
-}
+
+

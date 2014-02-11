@@ -4,8 +4,6 @@ package controller;
 import java.util.ArrayList;
 
 import model.base.Connector;
-import model.bd.Dao;
-import model.bd.TwittDao;
 import model.conexao.twitter.TwitterConexaoRest;
 import model.conexao.twitter.TwitterConexaoStreaming;
 import model.conexao.twitter.util.Tweet;
@@ -13,6 +11,8 @@ import model.conexao.twitter.util.DataRetrieved;
 
 import org.json.JSONException;
 
+import controller.bd.Dao;
+import controller.bd.TweetDao;
 import view.PainelPrincipal;
 
 
@@ -68,7 +68,7 @@ public class Principal {
 		    // nesta implementação ele já insere direto no banco de dados
 		     conn.getUserPosts("https://stream.twitter.com/1.1/statuses/filter.json");
 		     
-		     Dao dao = new TwittDao();
+		     Dao dao = new TweetDao();
 		     dao.select("");
 
 		

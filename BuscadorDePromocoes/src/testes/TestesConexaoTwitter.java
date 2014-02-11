@@ -13,14 +13,11 @@ public class TestesConexaoTwitter extends TestCase{
 		assertNotNull(conexao.getUserPosts(""));
 		assertNotNull(conexao.GetConsumer());
 		assertNotNull(conexao.GetFollowers("JohnCcomp"));
-		assertNotNull(conexao.GetSearchResults("#promoção"));
+		assertNotNull(conexao.GetSearchResults("#promocao"));
 		
 	}
 	
-	public void testConecaoStreaming(){
-		
-		
-	}
+	
 	
 	
 	

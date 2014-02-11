@@ -19,8 +19,6 @@ import java.util.List;
 
 import model.base.Connector;
 import model.base.Data;
-import model.bd.Dao;
-import model.bd.TwittDao;
 import model.conexao.twitter.util.OAuthTokenSecret;
 import model.conexao.twitter.util.OAuthUtils;
 import model.conexao.twitter.util.Tweet;
@@ -47,6 +45,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import controller.bd.Dao;
+import controller.bd.TweetDao;
+
 
 public class TwitterConexaoStreaming implements Connector
 {
@@ -59,7 +60,7 @@ public class TwitterConexaoStreaming implements Connector
     private HashSet<String> Geoboxes;
     private HashSet<String> Userids;
     private  DataRetrieved retorno;
-    private Dao banco = new TwittDao();
+    private Dao banco = new TweetDao();
     //pode ser lido de um banco de dados
     private final String CONFIG_FILE_PATH = "streaming/streaming.config";
     

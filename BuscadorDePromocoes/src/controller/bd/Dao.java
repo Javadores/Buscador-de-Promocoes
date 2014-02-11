@@ -1,4 +1,4 @@
-package model.bd;
+package controller.bd;
 
 import model.base.Data;
 

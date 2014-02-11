@@ -1,11 +1,35 @@
 package model.conexao.twitter.util;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class Tweet {
 	
 	
 	private String id;
 	private String usuario;
 	private String post;
+	private Time time;
+    private Date data;
+	
+
+
+	public Time getTime() {
+		return time;
+	}
+
+	public void setTime(Time time) {
+		this.time = time;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
 	
 	public String getUsuario() {
 		return usuario;
