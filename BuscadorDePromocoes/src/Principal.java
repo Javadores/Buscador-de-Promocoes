@@ -1,4 +1,3 @@
-package controller;
 
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import controller.bd.Dao;
 import controller.bd.TweetDao;
 import view.PainelPrincipal;
 
-
 public class Principal {
 
 	public static void buscasNome() throws JSONException {
@@ -25,20 +23,19 @@ public class Principal {
 		String[] nomes = { "JohnCcomp", "pontofrio", "hotel_urbano",
 				"Groupon_BR" };
 
-		//Dao dao = new TwittDao();
+		// Dao dao = new TwittDao();
 
 		// dao.criaBanco();
 
 		for (int i = 0; i < nomes.length; i++) {
 
-			DataRetrieved tweets = (DataRetrieved) connect.getUserPosts(nomes[i]);
-
-			
+			DataRetrieved tweets = (DataRetrieved) connect
+					.getUserPosts(nomes[i]);
 
 			for (Tweet t : tweets.getData()) {
 
 				System.out.println(t);
-				//dao.insert(t);
+				// dao.insert(t);
 
 			}
 
@@ -52,7 +49,8 @@ public class Principal {
 
 		Connector connect = (Connector) new TwitterConexaoRest();
 
-		DataRetrieved resultados = (DataRetrieved) connect.performASearch("#lightAmaldiçoada");
+		DataRetrieved resultados = (DataRetrieved) connect
+				.performASearch("#lightAmaldiçoada");
 
 		for (Tweet t : resultados.getData()) {
 
@@ -61,26 +59,47 @@ public class Principal {
 		}
 
 	}
-	
-	public static void streaming(){
-		
-		     Connector  conn = (Connector) new TwitterConexaoStreaming();
-		    // nesta implementação ele já insere direto no banco de dados
-		     conn.getUserPosts("https://stream.twitter.com/1.1/statuses/filter.json");
-		     
-		     Dao dao = new TweetDao();
-		     dao.select("");
 
-		
+	public static void streaming() {
+
+		Connector conn = (Connector) new TwitterConexaoStreaming();
+		// nesta implementação ele já insere direto no banco de dados
+		conn.getUserPosts("https://stream.twitter.com/1.1/statuses/filter.json");
+
+		Dao dao = new TweetDao();
+		dao.select("");
+
 	}
 
 	public static void main(String[] args) throws JSONException {
 
-		 PainelPrincipal painel = new PainelPrincipal();
-		
-		//buscasPorQuery();
-		//buscasNome();
-		streaming();
+		if (args.length > 0) {
+
+			if (args[0].equals("create")) {
+
+				if (args[1].equals("database")) {
+
+					new TweetDao().criaBanco();
+
+				}
+
+			}
+
+			if (args[0].equals("connect")) {
+
+				if (args[1].equals("streaming")) {
+
+					streaming();
+
+				} else if (args[1].equals("rest")) {
+
+					buscasPorQuery();
+
+				}
+
+			}
+
+		}
 
 	}
 }
