@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-public class DerbyConnection {
+public class PostConnection {
 	 
 	    private static Connection conn = null;
 	  
@@ -15,7 +15,7 @@ public class DerbyConnection {
 	    {
 	        try
 	        {
-	            Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
+	            Class.forName("org.postgresql.Driver").newInstance();
 	            //Get a connection
 	            conn = DriverManager.getConnection(url); 
 	        }

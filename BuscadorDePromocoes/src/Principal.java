@@ -22,10 +22,7 @@ public class Principal {
 
 		String[] nomes = { "JohnCcomp", "pontofrio", "hotel_urbano",
 				"Groupon_BR" };
-
-		// Dao dao = new TwittDao();
-
-		// dao.criaBanco();
+        Dao dao = new TweetDao();
 
 		for (int i = 0; i < nomes.length; i++) {
 
@@ -35,7 +32,7 @@ public class Principal {
 			for (Tweet t : tweets.getData()) {
 
 				System.out.println(t);
-				// dao.insert(t);
+				 dao.insert(t);
 
 			}
 

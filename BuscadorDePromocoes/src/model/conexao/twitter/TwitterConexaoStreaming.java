@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -191,6 +193,8 @@ public class TwitterConexaoStreaming implements Connector
                     tweet.setId(jsontweet.getString("id_str"));
                     tweet.setPost(jsontweet.getString("text"));
                     tweet.setUsuario(jsonuser.getString("screen_name"));
+                    tweet.setData(new Date(System.currentTimeMillis()));
+                    tweet.setTime(new Time(System.currentTimeMillis()));
                       
                         //joga os Tweets para o banco de dados
             //----------------------------------------------------------------------------------------------

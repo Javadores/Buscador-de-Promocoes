@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,12 +60,14 @@ public class TwitterConexaoRest implements Connector {
 
 			JSONObject result = array.getJSONObject(i);
 			JSONObject aux = new JSONObject(result.getString("user"));
-			Tweet twitt = new Tweet();
-			twitt.setId(result.getString("id_str"));
-			twitt.setPost(result.getString("text"));
-			twitt.setUsuario(aux.getString("screen_name"));
+			Tweet tweet = new Tweet();
+			tweet.setId(result.getString("id_str"));
+			tweet.setPost(result.getString("text"));
+			tweet.setUsuario(aux.getString("screen_name"));
+			tweet.setData(new Date(System.currentTimeMillis()));
+			tweet.setTime(new Time(System.currentTimeMillis()));
 
-			arrayTweets.add(twitt);
+			arrayTweets.add(tweet);
 
 		}
 		

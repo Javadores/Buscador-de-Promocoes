@@ -1,6 +1,7 @@
 package controller.bd;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -24,8 +25,8 @@ public class TweetDao implements Dao<Tweet, ArrayList<Tweet>> {
 	public TweetDao() {
 
 		try {
-			conn = DerbyConnection
-					.createConnection("jdbc:derby://localhost:1527/NetworksData;create=true;");
+			conn =DriverManager
+					.getConnection("jdbc:postgresql://localhost:5432/NetworksData","bp","bp2014");
 
 		} catch (Exception e) {
 
@@ -40,7 +41,7 @@ public class TweetDao implements Dao<Tweet, ArrayList<Tweet>> {
 		try {
 			stmt = conn.createStatement();
 			stmt.execute("create table "
-					+ "Tweet(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+					+ "Tweet(id SERIAL,"
 					+ " tweet_id varchar(50),tweet varchar(600),username varchar(50),horario time,data date ,CONSTRAINT primaryKey PRIMARY KEY (id))");
 		} catch (SQLException e) {
 
